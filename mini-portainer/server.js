@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
 
+
+const path = require('path');
 const app = express();
 const docker = new Docker();
 const pool = new Pool({
@@ -18,7 +20,8 @@ const pool = new Pool({
 
 app.use(express.json());
 app.use(cors());
-app.use(express.static('public'));
+// Garante que o caminho da pasta public é absoluto, independente de onde rodar o comando
+app.use(express.static(path.join(__dirname, 'public')));
 
 function authenticateToken(req, res, next) {
   const token = req.headers['authorization']?.split(' ')[1];
