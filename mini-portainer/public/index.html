@@ -1,0 +1,526 @@
+<!--
+  Mini Portainer - index.html
+  Este arquivo serve como artigo interativo e painel web do projeto.
+  Comentários e dicas foram inseridos para facilitar a apresentação e o entendimento do código.
+-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Portainer com Node.js e PostgreSQL - Tutorial Completo</title>
+  <!--
+    Estilos customizados para visual moderno e didático.
+    O artigo/tutorial está integrado ao painel funcional.
+  -->
+  <style>
+    :root {
+      --dev-bg: #181c21;
+      --dev-panel: #23272e;
+      --dev-surface: #252a31;
+      --dev-code-bg: #2b3139;
+      --dev-code-border: #434b57;
+      --dev-code-inline: #393f47;
+      --dev-blue: #53baf5;
+      --dev-green: #36c486;
+      --dev-purple: #b991e6;
+      --dev-gold: #e4d06f;
+      --dev-pink: #ff80bf;
+      --dev-gray: #e5e7eb;
+      --dev-lightgray: #c6cdd5;
+      --dev-accent: #53baf5;
+      --dev-warning: #ffe9a7;
+      --dev-tip: #eafbf3;
+      --dev-blockquote: #23272e;
+      --dev-blockquote-border: #53baf5;
+    }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.5rem 1rem 3rem 1rem;
+      background: var(--dev-bg);
+      color: var(--dev-gray);
+      line-height: 1.7;
+    }
+    h1, h2, h3, h4 {
+      color: var(--dev-blue);
+      margin-top: 1.5em;
+      margin-bottom: 0.6em;
+    }
+    h1 {
+      font-size: 2.4em;
+      text-align: center;
+      margin-bottom: 0.5em;
+      color: var(--dev-green);
+    }
+    h2 {
+      font-size: 1.6em;
+      border-bottom: 2px solid var(--dev-surface);
+      padding-bottom: 0.2em;
+      margin-top: 2.5em;
+    }
+    h3 {
+      font-size: 1.15em;
+      margin-top: 1.3em;
+    }
+    pre, code {
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      font-size: 1em;
+    }
+    code {
+      background: var(--dev-code-inline);
+      padding: 0.2em 0.38em;
+      border-radius: 4px;
+      color: var(--dev-gold);
+      border: 1px solid var(--dev-code-border);
+    }
+    pre {
+      background: var(--dev-code-bg);
+      color: var(--dev-lightgray);
+      padding: 1.2em 1em;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin-bottom: 1.3em;
+      margin-top: 0.3em;
+      border: 1px solid var(--dev-code-border);
+      box-shadow: 0 4px 16px #23272e55;
+    }
+    blockquote {
+      background: var(--dev-blockquote);
+      border-left: 5px solid var(--dev-blockquote-border);
+      margin: 2em 0 2em 0;
+      padding: 1.1em 1.5em;
+      border-radius: 5px;
+      font-size: 1.08em;
+      color: var(--dev-blue);
+    }
+    ul, ol {
+      margin-left: 2em;
+      margin-bottom: 1.2em;
+    }
+    a {
+      color: var(--dev-accent);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .highlight {
+      background: var(--dev-warning);
+      font-weight: bold;
+      color: #111;
+    }
+    .tip {
+      background: var(--dev-tip);
+      color: #145c38;
+      padding: 0.7em 1em;
+      border-left: 5px solid var(--dev-green);
+      border-radius: 4px;
+      margin: 1.4em 0;
+      font-size: 1.03em;
+    }
+    .center {
+      text-align: center;
+    }
+    .steps {
+      background: #22262d;
+      border-left: 5px solid var(--dev-gold);
+      padding: 1em 1.3em;
+      border-radius: 6px;
+      margin: 1.2em 0;
+    }
+    img {
+      display: block;
+      margin: 1.2em auto;
+      max-width: 98%;
+      border-radius: 7px;
+      box-shadow: 0 6px 25px 0 #1b202966;
+    }
+    .hero {
+      font-size: 1.2em;
+      color: var(--dev-blue);
+      margin-bottom: 1.4em;
+      text-align: center;
+      font-weight: 500;
+    }
+    .checklist li {
+      margin-bottom: 0.5em;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid var(--dev-surface);
+      margin: 2em 0;
+    }
+    .refs {
+      font-size: 0.98em;
+    }
+    .refs li {
+      margin-bottom: 0.35em;
+    }
+    /* Frontend sample style */
+    .html-sample {
+      background: var(--dev-panel);
+      color: var(--dev-gray);
+      border: 1px solid var(--dev-code-border);
+      border-radius: 8px;
+      padding: 1.3em 1em;
+      margin: 1.5em 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .html-sample input, .html-sample button {
+      padding: 0.7em;
+      margin: 0.4em 0;
+      border-radius: 4px;
+      border: 1px solid #333;
+      background: #23272e;
+      color: var(--dev-gray);
+    }
+    .html-sample button {
+      background: var(--dev-green);
+      color: #fff;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .html-sample button:hover {
+      background: #159b66;
+    }
+    .html-sample ul {
+      padding-left: 1.2em;
+    }
+    .html-sample .msg {
+      margin: 1em 0;
+      color: var(--dev-blue);
+    }
+    .html-sample .err {
+      color: var(--dev-pink);
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 Construindo um Mini Portainer com Node.js e PostgreSQL</h1>
+  <div class="hero">
+    Aprenda a criar um painel web para gerenciar containers Docker, com autenticação e registro de ações, usando Node.js, Express, PostgreSQL e Dockerode.<br>
+    <span class="highlight">Tutorial expansivo, prático e estilizado!</span>
+  </div>
+
+  <blockquote>
+    <b>O que você vai aprender:</b> <br>
+    Node.js + Express, PostgreSQL, JWT, bcryptjs, Dockerode, REST API, autenticação, auditoria de ações e um front-end leve em HTML+JS.
+  </blockquote>
+
+  <h2>🎯 Visão Geral</h2>
+  <p>
+    Imagine controlar seus containers Docker de forma visual, sem decorar comandos do terminal, com total rastreabilidade. <b>É isso que você vai construir aqui!</b>
+  </p>
+  <ul class="checklist">
+    <li>💻 <b>Listar</b> containers em execução e todos os existentes.</li>
+    <li>▶️ <b>Iniciar</b> containers parados com 1 clique.</li>
+    <li>⏸️ <b>Parar</b> containers ativos com segurança.</li>
+    <li>🔒 <b>Login</b> seguro e <b>registro de todas ações</b> no banco de dados.</li>
+    <li>📝 <b>Painel web</b> minimalista, fácil de adaptar e expandir.</li>
+  </ul>
+  <div class="tip">
+    <b>Dica:</b> Além de aprender Docker e Node.js, esse projeto reforça boas práticas de desenvolvimento seguro (hash de senhas, JWT, variáveis de ambiente, registro de auditoria).
+  </div>
+
+  <h2>🛠️ Pré-requisitos</h2>
+  <ol>
+    <li><b>Node.js</b> (v12.2+)</li>
+    <li><b>PostgreSQL</b> instalado e rodando</li>
+    <li><b>Docker</b> instalado e funcionando</li>
+    <li>Noções básicas de JavaScript, SQL e Docker</li>
+    <li>Editor de código (VSCode recomendado)</li>
+  </ol>
+  <div class="tip">
+    <b>Importante:</b> Guarde variáveis sensíveis (como senhas e chaves JWT) em um arquivo <code>.env</code> e adicione ele ao seu <code>.gitignore</code>!
+  </div>
+
+  <h2>📁 Estrutura do Projeto</h2>
+  <pre><code>mini-portainer/
+├── node_modules/
+├── server.js
+├── package.json
+├── .env
+├── public/
+│   └── index.html
+</code></pre>
+  <h3>Instalação dos pacotes</h3>
+  <pre><code>npm init -y
+npm install express pg dockerode jsonwebtoken bcryptjs dotenv cors
+</code></pre>
+
+  <h2>🗄️ Banco de Dados PostgreSQL</h2>
+  <p>
+    Crie o banco e as tabelas para usuários e auditoria de ações:
+  </p>
+  <pre><code>CREATE DATABASE mini_portainer;
+\c mini_portainer;
+
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(50) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE actions (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  action_type VARCHAR(50) NOT NULL,
+  target VARCHAR(255) NOT NULL,
+  timestamp TIMESTAMP NOT NULL DEFAULT NOW()
+);</code></pre>
+  <blockquote>
+    <b>Auditoria:</b> Toda ação de start/stop será registrada em <code>actions</code>, garantindo rastreabilidade total.
+  </blockquote>
+
+  <h2>🔧 Backend Node.js (server.js)</h2>
+  <h3>Configuração inicial</h3>
+  <pre><code>require('dotenv').config();
+const express = require('express');
+const Docker = require('dockerode');
+const { Pool } = require('pg');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const cors = require('cors');
+
+const app = express();
+const docker = new Docker();
+const pool = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+});
+
+app.use(express.json());
+app.use(cors()); // Liberar acesso ao frontend
+app.use(express.static('public')); // Servir index.html
+</code></pre>
+
+  <h3>Autenticação JWT</h3>
+  <pre><code>function authenticateToken(req, res, next) {
+  const token = req.headers['authorization']?.split(' ')[1];
+  if (!token) return res.status(401).send('🔒 Acesso negado');
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).send('🚫 Token inválido');
+    req.user = user;
+    next();
+  });
+}</code></pre>
+
+  <h3>Rotas de Usuário</h3>
+  <pre><code>// Registro
+app.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+  const password_hash = bcrypt.hashSync(password, 10);
+  await pool.query(
+    'INSERT INTO users (username, password_hash) VALUES ($1, $2)',
+    [username, password_hash]
+  );
+  res.send('🎉 Registrado com sucesso');
+});
+
+// Login
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+  const user = result.rows[0];
+  if (user && bcrypt.compareSync(password, user.password_hash)) {
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token });
+  } else {
+    res.status(401).send('❌ Credenciais inválidas');
+  }
+});
+</code></pre>
+
+  <h3>Rotas Docker (listar, iniciar, parar)</h3>
+  <pre><code>// Listar containers
+app.get('/containers', authenticateToken, async (req, res) => {
+  const containers = await docker.listContainers({ all: true });
+  res.json(containers);
+});
+
+// Iniciar container
+app.post('/containers/:id/start', authenticateToken, async (req, res) => {
+  const container = docker.getContainer(req.params.id);
+  await container.start();
+  await pool.query(
+    'INSERT INTO actions (user_id, action_type, target) VALUES ($1, $2, $3)',
+    [req.user.id, 'start', req.params.id]
+  );
+  res.send('▶️ Container iniciado');
+});
+
+// Parar container
+app.post('/containers/:id/stop', authenticateToken, async (req, res) => {
+  const container = docker.getContainer(req.params.id);
+  await container.stop();
+  await pool.query(
+    'INSERT INTO actions (user_id, action_type, target) VALUES ($1, $2, $3)',
+    [req.user.id, 'stop', req.params.id]
+  );
+  res.send('⏸️ Container parado');
+});
+</code></pre>
+
+  <h3>Servidor ouvindo</h3>
+  <pre><code>const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log('Servidor rodando na porta', PORT);
+});</code></pre>
+
+  <h2>🔑 .env de exemplo</h2>
+  <pre><code>DB_USER=seu_usuario
+DB_HOST=localhost
+DB_NAME=mini_portainer
+DB_PASSWORD=sua_senha
+DB_PORT=5432
+JWT_SECRET=umasecretfortejwt
+PORT=3000
+</code></pre>
+
+  <h2>🎨 Frontend Simples (public/index.html)</h2>
+  <div class="steps">
+    <b>Funcionalidades:</b><br>
+    <ul>
+      <li>Login e exibição da lista de containers</li>
+      <li>Botões para iniciar/parar containers</li>
+      <li>Respostas visuais rápidas para o usuário</li>
+    </ul>
+  </div>
+  <div class="html-sample">
+    <input id="username" placeholder="Usuário" /><br>
+    <input id="password" type="password" placeholder="Senha" /><br>
+    <button onclick="login()">Login</button>
+    <button onclick="register()">Registrar</button>
+    <div id="login-msg" class="msg"></div>
+    <div id="dashboard" style="display:none">
+      <h3>Containers Docker</h3>
+      <button onclick="loadContainers()">Atualizar</button>
+      <ul id="container-list"></ul>
+      <button onclick="logout()" style="background:#e74c3c;">Logout</button>
+      <div id="action-msg" class="msg"></div>
+    </div>
+    <script>
+      let token = "";
+      function showMsg(id, text, error=false) {
+        const el = document.getElementById(id);
+        el.textContent = text;
+        el.className = error ? "msg err" : "msg";
+      }
+      function login() {
+        fetch('/login', {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: username.value, password: password.value })
+        })
+        .then(r => r.ok ? r.json() : Promise.reject("Credenciais inválidas"))
+        .then(d => {
+          token = d.token;
+          document.getElementById("login-msg").textContent = "";
+          document.getElementById("dashboard").style.display = "block";
+          showMsg("action-msg", "Login OK!");
+          loadContainers();
+        })
+        .catch(e => showMsg("login-msg", e, true));
+      }
+      function register() {
+        fetch('/register', {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: username.value, password: password.value })
+        })
+        .then(r => r.ok ? r.text() : Promise.reject("Falha ao registrar"))
+        .then(t => showMsg("login-msg", t))
+        .catch(e => showMsg("login-msg", e, true));
+      }
+      function loadContainers() {
+        fetch('/containers', {
+          headers: { Authorization: "Bearer " + token }
+        })
+        .then(r => r.json())
+        .then(list => {
+          const ul = document.getElementById("container-list");
+          ul.innerHTML = "";
+          list.forEach(c => {
+            const li = document.createElement("li");
+            li.innerHTML = 
+              "<b>" + (c.Names[0] || c.Id.slice(0,10)) + "</b> [" + c.State + "]" +
+              (c.State==="running" 
+                ? ` <button onclick="stopContainer('${c.Id}')">Parar</button>`
+                : ` <button onclick="startContainer('${c.Id}')">Iniciar</button>`);
+            ul.appendChild(li);
+          });
+        })
+        .catch(() => showMsg("action-msg", "Erro ao listar containers", true));
+      }
+      function startContainer(id) {
+        fetch(`/containers/${id}/start`, {
+          method:"POST",
+          headers: { Authorization: "Bearer " + token }
+        })
+        .then(r => r.ok ? r.text() : Promise.reject("Falha ao iniciar"))
+        .then(t => { showMsg("action-msg", t); loadContainers(); })
+        .catch(e => showMsg("action-msg", e, true));
+      }
+      function stopContainer(id) {
+        fetch(`/containers/${id}/stop`, {
+          method:"POST",
+          headers: { Authorization: "Bearer " + token }
+        })
+        .then(r => r.ok ? r.text() : Promise.reject("Falha ao parar"))
+        .then(t => { showMsg("action-msg", t); loadContainers(); })
+        .catch(e => showMsg("action-msg", e, true));
+      }
+      function logout() {
+        token = "";
+        document.getElementById("dashboard").style.display = "none";
+        showMsg("login-msg", "Logout realizado.");
+      }
+    </script>
+  </div>
+
+  <h2>🧪 Testando Passo a Passo</h2>
+  <ol>
+    <li>Crie o banco e as tabelas no PostgreSQL conforme acima.</li>
+    <li>Preencha o arquivo <b>.env</b> com seus dados locais.</li>
+    <li>Rode <code>node server.js</code>.</li>
+    <li>Acesse <code>http://localhost:3000</code> no navegador.</li>
+    <li>Registre-se, faça login e gerencie seus containers!</li>
+    <li>Verifique os registros de ações na tabela <code>actions</code> para auditoria.</li>
+  </ol>
+
+  <h2>🛡️ Segurança e Possíveis Expansões</h2>
+  <ul>
+    <li>Troque <code>JWT_SECRET</code> por uma string forte e secreta.</li>
+    <li>Adicione logout automático ao expirar o token.</li>
+    <li>Permita múltiplos usuários e diferentes permissões.</li>
+    <li>Adicione logs de falhas e tentativas de acesso.</li>
+    <li>Crie um painel para visualizar o histórico de ações por container/usuário.</li>
+    <li>Implemente filtros de pesquisa e paginação na listagem de containers.</li>
+    <li>Adicione deploy de imagens, remoção e criação de containers via UI.</li>
+  </ul>
+
+  <hr>
+
+  <h2>📚 Referências e Links Úteis</h2>
+  <ul class="refs">
+    <li><a href="https://expressjs.com/">Express.js</a></li>
+    <li><a href="https://www.postgresql.org/docs/">PostgreSQL Docs</a></li>
+    <li><a href="https://github.com/apocas/dockerode">Dockerode (NPM)</a></li>
+    <li><a href="https://jwt.io/">JSON Web Token (JWT)</a></li>
+    <li><a href="https://www.npmjs.com/package/bcryptjs">bcryptjs</a></li>
+    <li><a href="https://developer.mozilla.org/pt-BR/docs/Web/JavaScript">MDN JavaScript</a></li>
+  </ul>
+
+  <div class="center" style="margin-top:2.2em;font-size:1.1em;">
+    Gostou? Compartilhe e evolua esse projeto!<br>
+    <span style="color:#36c486;font-weight:bold">#NodeJS #Docker #PostgreSQL #DevPrático</span>
+  </div>
+</body>
+</html>
