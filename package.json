@@ -1,4 +1,10 @@
 {
+  "name": "mini-portainer-root",
+  "private": true,
+  "scripts": {
+    "start": "cd mini-portainer && npm start",
+    "dev": "cd mini-portainer && npm run dev"
+  },
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
